@@ -40,5 +40,5 @@ def SMA(token,number):
         df=pd.DataFrame(res_json['data'],columns=columns)
         df['timestamp']=pd.to_datetime(df['timestamp'],format='%Y-%m-%dT%H:%M:%S')
         return df['C'].rolling(window=number).mean().iloc[-1]
-    except Exception as e:
+    except:
         return False
