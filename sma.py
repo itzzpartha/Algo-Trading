@@ -7,12 +7,9 @@ Created on Fri Aug 27 21:24:36 2021
 
 from smartapi import SmartConnect
 from datetime import datetime,timedelta
-import json
 import pandas as pd
-import requests
-import numpy as np
 
-#This changes according to the user
+#This changes according to the user-----------------
 apikey='VXdBs3Rp'
 username='P319380'
 pwd='partha2001'
@@ -21,7 +18,7 @@ data = obj.generateSession(username,pwd)
 refreshToken= data['data']['refreshToken']
 feedToken=obj.getfeedToken()
 userProfile= obj.getProfile(refreshToken)
-#
+#The data entered above is mine----------------------
 
 def SMA(token,number):
     to_date=datetime.now()
