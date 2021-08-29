@@ -1,12 +1,12 @@
 '''
 Prototype For Swing Algo Trading
 '''
-
 from smartapi import SmartConnect
 from datetime import datetime,timedelta
 import pandas as pd
 import time
 
+#This changes according to the user---------------
 apikey='VXdBs3Rp'
 username='P319380'
 pwd='partha2001'
@@ -48,23 +48,29 @@ def historicalData(token,period):
                        "todate":to_date.strftime("%Y-%m-%d %H:%M")
                       }
         return(obj.getCandleData(historicParam))
-    except Exception as e:
-         print("Error: {}".format(e.message))    
+    except:
+        return None  
         
 def SMA(token,period):
     try:
         data=historicalData(token,period)
         df=pd.DataFrame(data['data'],columns=['T','O','H','L','C','V'])
         return round(df['C'].rolling(window=period).mean().iloc[-1],2)
-    except Exception as e:
-         print("Error: {}".format(e.message))
+    except:
+         return None
                 
 def updateData():
     df=pd.read_csv("stock_data.csv")
     rv=pd.read_csv("stock_data.csv").set_index('token')
-    for i, row in df.iterrows():
-        rv.loc[row['token'],'dma50']=SMA(row['token'], 50)
-        time.sleep(0.5)
-        rv.loc[row['token'],'dma200']=SMA(row['token'], 200)
-        time.sleep(0.5)
-    rv.to_csv("stock_data.csv")
+    try:
+        
+        for i, row in df.iterrows():
+            rv.loc[row['token'],'dma50']=SMA(row['token'], 50) 
+            time.sleep(0.5)
+            rv.loc[row['token'],'dma200']=SMA(row['token'], 200)
+            time.sleep(0.5)
+    except:
+        print("Error")
+    rv.to_csv("stock_data.csv",index=False)
+    
+updateData()
