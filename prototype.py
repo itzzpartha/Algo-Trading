@@ -70,4 +70,4 @@ def updateData():
             time.sleep(0.5)
     except:
         print("Error")
-    rv.to_csv("stock_data.csv",index=False)
+    rv.to_csv("stock_data.csv")
