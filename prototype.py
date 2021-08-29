@@ -67,4 +67,4 @@ def updateData():
         time.sleep(0.5)
         rv.loc[row['token'],'dma200']=SMA(row['token'], 200)
         time.sleep(0.5)
-    df.to_csv("stock_data.csv")
+    rv.to_csv("stock_data.csv")
