@@ -6,7 +6,6 @@ from datetime import datetime,timedelta
 import pandas as pd
 import time
 
-#This changes according to the user---------------
 apikey='VXdBs3Rp'
 username='P319380'
 pwd='partha2001'
@@ -72,5 +71,3 @@ def updateData():
     except:
         print("Error")
     rv.to_csv("stock_data.csv",index=False)
-    
-updateData()
