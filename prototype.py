@@ -118,14 +118,14 @@ average calculated for the individual stocks on a daily basis.
         
 def updateData():
     df=pd.read_csv("stock_data.csv")
-    rv=pd.read_csv("stock_data.csv").set_index('token')
-    try:        
-        for i, row in df.iterrows():
+    rv=pd.read_csv("stock_data.csv").set_index('token')        
+    for i, row in df.iterrows():
+        try:            
             data=historicalData(row['token'],200)
             rv.loc[row['token'],'dma50']=SMA(data, 50, 1) 
             rv.loc[row['token'],'dma200']=SMA(data, 200, 1)
-    except:
-        print("Error")
+        except:
+            pass
     rv.to_csv("stock_data.csv")
 
 '''--------------------------------------------------------------------------------------------------------
@@ -153,20 +153,23 @@ def shortListOneDay():
     df=pd.read_csv("stock_data.csv")
     rv=pd.read_csv("stock_data.csv").set_index('token')
     for i, row in df.iterrows():
-        ltp=historicalData(row['token'],4)['C'].iloc[-1]
-        dma50=rv.loc[row['token'],'dma50']
-        dma200=rv.loc[row['token'],'dma200']
-        if(dma50>dma200)and(dma200>0)and(rv.loc[row['token'],'slm']==0):
-            if(ltp>dma50):
-                data=historicalData(row['token'],75)
-                if(data['C'].iloc[-1]>=dma50)and(data['C'].iloc[-2]>=dma50)and(data['C'].iloc[-3]>=dma50)and(data['C'].iloc[-4]>=dma50)and(data['C'].iloc[-5]>=dma50):
-                    if(SMA(data,50,1)>SMA(data,50,6)>SMA(data,50,11)>SMA(data,50,16)>SMA(data,50,21)):
-                        sl_1day[row['token']]=[rv.loc[row['token'],'stockname'], 50, dma50]
+        try:    
+            ltp=historicalData(row['token'],4)['C'].iloc[-1]
+            dma50=rv.loc[row['token'],'dma50']
+            dma200=rv.loc[row['token'],'dma200']
+            if(dma50>dma200)and(dma200>0)and(rv.loc[row['token'],'slm']==0):
+                if(ltp>dma50):
+                    data=historicalData(row['token'],75)
+                    if(data['C'].iloc[-1]>=dma50)and(data['C'].iloc[-2]>=dma50)and(data['C'].iloc[-3]>=dma50)and(data['C'].iloc[-4]>=dma50)and(data['C'].iloc[-5]>=dma50):
+                        if(SMA(data,50,1)>SMA(data,50,6)>SMA(data,50,11)>SMA(data,50,16)>SMA(data,50,21)):
+                            sl_1day[row['token']]=[rv.loc[row['token'],'stockname'], 50, dma50]
             elif(ltp<dma50)and(ltp>dma200):
                 data=historicalData(row['token'],300)
                 if(data['C'].iloc[-1]>=dma200)and(data['C'].iloc[-2]>=dma200)and(data['C'].iloc[-3]>=dma200)and(data['C'].iloc[-4]>=dma200)and(data['C'].iloc[-5]>=dma200):
                     if(SMA(data,200,1)>SMA(data,200,21)>SMA(data,200,41)>SMA(data,200,61)>SMA(data,200,81)):
                         sl_1day[row['token']]=[rv.loc[row['token'],'stockname'], 200, dma200]
+        except:
+            pass
 
 '''--------------------------------------------------------------------------------------------------------
 
@@ -198,28 +201,33 @@ Concept :
 
 def shortList15():
     for i in sl_1day:
-        ltp=getLtpData(i)
-        if ltp<(1.1*sl_1day[i][2]):
-            sl_15minute[i]=[sl_1day[i][1],sl_1day[i][2]]
-        elif(i in sl_15minute):
-            del sl_15minute[i]
+        try:            
+            ltp=getLtpData(i)
+            if ltp<(1.1*sl_1day[i][2]):
+                sl_15minute[i]=[sl_1day[i][1],sl_1day[i][2]]
+            elif(i in sl_15minute):
+                del sl_15minute[i]
+        except:
+            pass
             
 def shortList5():
     for i in sl_15minute:
-        ltp=getLtpData(i)
-        if ltp<(1.05*sl_15minute[i][1]):
-            sl_5minute[i]=sl_15minute[i]
-        elif(i in sl_5minute):
-            del sl_5minute[i]
+        try:
+            ltp=getLtpData(i)
+            if ltp<(1.05*sl_15minute[i][1]):
+                sl_5minute[i]=sl_15minute[i]
+            elif(i in sl_5minute):
+                del sl_5minute[i]
+        except:
+            pass
             
 def shortList1():
     for i in sl_5minute:
-        ltp=getLtpData(i)
-        if ltp<(1.01*sl_5minute[i][1]):
-            sl_1minute[i]=sl_5minute[i]
-        elif(i in sl_1minute):
-            del sl_5minute[i]
- 
-'''
--------------------------------------------------------------------------------------------------------------
-'''
+        try:
+            ltp=getLtpData(i)
+            if ltp<(1.01*sl_5minute[i][1]):
+                sl_1minute[i]=sl_5minute[i]
+            elif(i in sl_1minute):
+                del sl_5minute[i]
+        except:
+            pass
