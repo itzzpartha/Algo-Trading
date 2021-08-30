@@ -1,31 +1,13 @@
-'''--------------------------------------------------------------------------------------------------------
-
-Prototype For Swing Algo Trading.
-
---------------------------------------------------------------------------------------------------------'''
-
 from smartapi import SmartConnect
 from datetime import datetime,timedelta
 import pandas as pd
 import time
-
-'''--------------------------------------------------------------------------------------------------------
-
-Defining the Dictionaries to work upon. Need to be deleted at the end of the day.
-
---------------------------------------------------------------------------------------------------------'''
 
 sl_1day={}
 sl_15minute={}
 sl_5minute={}
 sl_1minute={}
 sl_ltp={}
-
-'''--------------------------------------------------------------------------------------------------------
-
-Storing the credentials for the api to work succesfully, along with generating the session.
-
---------------------------------------------------------------------------------------------------------'''
 
 apikey='VXdBs3Rp'
 username='P319380'
@@ -35,12 +17,6 @@ data = obj.generateSession(username,pwd)
 refreshToken= data['data']['refreshToken']
 feedToken=obj.getfeedToken()
 userProfile= obj.getProfile(refreshToken)
-
-'''--------------------------------------------------------------------------------------------------------
-
-This function will be called whenever a Buy / Sell order needs to be placed.
-
---------------------------------------------------------------------------------------------------------'''
 
 def orderPlacement(tradingsymbol, symboltoken, buy_sell, quantity):
     try:
@@ -63,12 +39,6 @@ def orderPlacement(tradingsymbol, symboltoken, buy_sell, quantity):
     except Exception as e:
         print("Order placement failed: {}".format(e.message))     
 
-'''--------------------------------------------------------------------------------------------------------
-
-This function returns the Open, High, Low, Close and Volume data in the form of a Data Frame
-
---------------------------------------------------------------------------------------------------------'''
-
 def historicalData(token,period):
     to_date=datetime.now()
     from_date=to_date-timedelta(days=period*1.5)
@@ -83,38 +53,16 @@ def historicalData(token,period):
         return(pd.DataFrame(obj.getCandleData(historicParam)['data'],columns=['T','O','H','L','C','V']))
     except:
         return None  
-
-'''--------------------------------------------------------------------------------------------------------
-
-This function takes input as the Historical Data, the period i.e 10 to 210, and the last day for which the 
-SMA is needed and finally returns the corresponding Daily Moving Average value for the stock.
-
---------------------------------------------------------------------------------------------------------'''
         
 def SMA(data,period,last_n_day):
     try:
         return round(data['C'].rolling(window=period).mean().iloc[-1*last_n_day],2)
     except:
-         return(-1)
-
-'''--------------------------------------------------------------------------------------------------------
-
-This function takes input as the token of the stock, and then returns the LTP value of the stock. This 
-function can only be called after the sl_1day  dictionary has been created, since it takes input from 
-this dictionary.
-
---------------------------------------------------------------------------------------------------------'''     
+         pass
  
 def getLtpData(token):
     time.sleep(0.1)          
     return(obj.ltpData('NSE', sl_1day[token][0], token)['data']['ltp'])
-
-'''--------------------------------------------------------------------------------------------------------
-
-This function updates the csv database of 500 stocks based on the latest values  of 50 and 200 moving 
-average calculated for the individual stocks on a daily basis.
-
---------------------------------------------------------------------------------------------------------'''    
         
 def updateData():
     df=pd.read_csv("stock_data.csv")
@@ -127,27 +75,6 @@ def updateData():
         except:
             pass
     rv.to_csv("stock_data.csv")
-
-'''--------------------------------------------------------------------------------------------------------
-
-This function generates a dictionary of key value pairs, with key being the token of the stocks that 
-satisfy the necessary conditions, and the values being their equivalent stock name. The data is stored 
-in a dictionary named sl_1day.
-
-Concept 1:
-    
-    Only those stocks are chosen whose 50 DMA value is greater than their 200 DMA values.
-    Also the stocks whose data could not be retrieved are cut off here.
-    And finally, the stocks which are already in an open position are also skipped.
-
-Concept 2:
-    
-    The stocks are sorted according to whether they are near their 50 DMA or their 200 DMA.
-    Then they are checked on the basis of last 5 day closing, this determines the stock's past movement.
-    Then the corresponding 50 / 200 DMA is confirmed for bullishness.
-    If the conditions are satisfied, then add to watchlist ( sl_1day )
-    
---------------------------------------------------------------------------------------------------------'''
 
 def shortListOneDay():
     df=pd.read_csv("stock_data.csv")
@@ -170,34 +97,6 @@ def shortListOneDay():
                         sl_1day[row['token']]=[rv.loc[row['token'],'stockname'], 200, dma200]
         except:
             pass
-
-'''--------------------------------------------------------------------------------------------------------
-
-These functions generate dictionaries of lists, with keys being the tokens of the stocks and the values
-being a list comprising of two numbers, first one being 50 or 200 ( depending on which one is closer)
-and the second one being the corresponding 50 or 200 SMA value.
-
-Concept :
-    
-    shortList15():
-        
-        Checks if the stock has come inside the 10% zone from the corresponding SMA.
-        Store the data in dictionary sl_15minute if conditions satisfy.
-        Has to be checked every 15 minutes.
-        
-    shortList5():
-        
-        Checks if the stock has come inside the 5% zone from the corresponding SMA.
-        Store the data in dictionary sl_15minute if conditions satisfy.
-        Has to be checked every 5 minutes.
-        
-    shortList5():
-            
-        Checks if the stock has come inside the 1% zone from the corresponding SMA.
-        Store the data in dictionary sl_15minute if conditions satisfy.
-        Has to be checked every 1 minute.
-
---------------------------------------------------------------------------------------------------------'''
 
 def shortList15():
     for i in sl_1day:
@@ -231,3 +130,9 @@ def shortList1():
                 del sl_5minute[i]
         except:
             pass
+        
+shortListOneDay()
+shortList15()
+shortList5()
+shortList1()
+print(sl_1minute)
