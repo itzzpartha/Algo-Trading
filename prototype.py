@@ -130,9 +130,3 @@ def shortList1():
                 del sl_5minute[i]
         except:
             pass
-        
-shortListOneDay()
-shortList15()
-shortList5()
-shortList1()
-print(sl_1minute)
