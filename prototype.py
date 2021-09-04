@@ -105,7 +105,7 @@ def updateIndividualData():
               idf.drop(0,axis=0,inplace=True)
           else:
               idf=idf.append(tdf)              
+          idf.to_sql(str(df.loc[row[0],'token']),engine,if_exists='replace',index=False)
 
-
-updateIndividualData()
+# updateIndividualData()
 # updateMainData()
