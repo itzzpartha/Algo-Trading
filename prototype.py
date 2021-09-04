@@ -18,29 +18,26 @@ userProfile= obj.getProfile(refreshToken)
 engine=sqlalchemy.create_engine('sqlite:///database.db')
 
 def atr(token):
-    df=pd.read_sql(str(token),engine)
-    if df.shape[0] > 20:      
-        sum=0
-        for i in range(14):
-            sum+=max(abs(df['H'].iloc[-1*(i+1)]-df['L'].iloc[-1*(i+1)]),abs(df['H'].iloc[-1*(i+1)]-df['C'].iloc[-1*(i+2)]),abs(df['L'].iloc[-1*(i+1)]-df['C'].iloc[-1*(i+2)]))            
-        return(sum/14)
+    df=pd.read_sql(str(token),engine)     
+    sum=0
+    for i in range(14):
+        sum+=max(abs(df['H'].iloc[-1*(i+1)]-df['L'].iloc[-1*(i+1)]),abs(df['H'].iloc[-1*(i+1)]-df['C'].iloc[-1*(i+2)]),abs(df['L'].iloc[-1*(i+1)]-df['C'].iloc[-1*(i+2)]))            
+    return(sum/14)
 
         
 def sma(token,period,paramater):
     df=pd.read_sql(str(token),engine)
-    if df.shape[0] > period:
-        sum=0
-        for i in range(period):
-            sum+=df[paramater].iloc[-1*(i+1)]/period
-        return(sum)
+    sum=0
+    for i in range(period):
+        sum+=df[paramater].iloc[-1*(i+1)]/period
+    return(sum)
     
 def vma(token):
     df=pd.read_sql(str(token),engine)
-    if df.shape[0] > 50:
-        sum=0
-        for i in range(50):
-            sum+=df['V'].iloc[-1*(i+1)]
-        return(sum/50)
+    sum=0
+    for i in range(50):
+        sum+=df['V'].iloc[-1*(i+1)]
+    return(sum/50)
     
     
 def placeOrder(tradingsymbol, symboltoken, buy_sell, quantity):
