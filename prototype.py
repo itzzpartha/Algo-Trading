@@ -100,11 +100,9 @@ def updateIndividualData():
       for row in df.itertuples():
           idf=pd.read_sql(str(df.loc[row[0],'token']),engine)
           tdf=historicalData(np.int16(df.loc[row[0],'token']).item(),2).iloc[-1]
+          idf=idf.append(tdf)
           if idf.shape[0] > 300:
-              idf=idf.append(tdf)
-              idf.drop(0,axis=0,inplace=True)
-          else:
-              idf=idf.append(tdf)              
+              idf.drop(0,axis=0,inplace=True)           
           idf.to_sql(str(df.loc[row[0],'token']),engine,if_exists='replace',index=False)
 
 # updateIndividualData()
