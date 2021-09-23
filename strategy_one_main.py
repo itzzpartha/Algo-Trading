@@ -3,7 +3,6 @@ from datetime import datetime,timedelta
 import pandas as pd
 import time
 import sqlalchemy
-import math
 
 engine=sqlalchemy.create_engine('sqlite:///data.db')
 
