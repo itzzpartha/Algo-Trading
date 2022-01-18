@@ -312,13 +312,13 @@ def validate(time):
                     redisClient0.hset("validate",token,vald+1)
 
 credentials = {
-    "client_id":"HDKC07IA7F-100",
-    "secret_key":"F0S89MO2H7",
-    "redirect_uri":"https://www.google.com",
-    "user_id":"XP04072",
-    "password":"Ppb@2001",
-    "two_fa":"EHAPB8813B",
-    "pin":"2015"
+    "client_id":"",
+    "secret_key":"",
+    "redirect_uri":"",
+    "user_id":"",
+    "password":"",
+    "two_fa":"",
+    "pin":""
     }
 
 nifty_auto = ["NSE:AMARAJABAT-EQ","NSE:ASHOKLEY-EQ","NSE:BAJAJ-AUTO-EQ","NSE:BALKRISIND-EQ","NSE:BHARATFORG-EQ","NSE:EICHERMOT-EQ","NSE:EXIDEIND-EQ","NSE:HEROMOTOCO-EQ","NSE:M&M-EQ","NSE:TATAMOTORS-EQ","NSE:TVSMOTOR-EQ"]
