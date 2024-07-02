@@ -2,4 +2,4 @@
 - It also executes live market orders directly on the National Stock Exchange through a registered broker API
 - It does proper position sizing and risk management on the overall capital
 
-- Technologies Used: Python & Fyers API 
+- Technologies Used: Python for building the whole back-end skeleton, Redis for Database & Fyers API for fetching price details and executing orders 
